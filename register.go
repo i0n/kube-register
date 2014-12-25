@@ -5,24 +5,24 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-        "io/ioutil"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
 
 type Minion struct {
-	Kind   string `json:"kind,omitempty"`
-	ID     string `json:"id,omitempty"`
-	HostIP string `json:"hostIP,omitempty"`
-        APIVersion string `json:"apiVersion,omitempty"`
+	Kind       string `json:"kind,omitempty"`
+	ID         string `json:"id,omitempty"`
+	HostIP     string `json:"hostIP,omitempty"`
+	APIVersion string `json:"apiVersion,omitempty"`
 }
 
 func register(endpoint, addr string) error {
 	m := &Minion{
-		Kind:   "Minion",
-                APIVersion: "v1beta1",
-		ID:     addr,
-		HostIP: addr,
+		Kind:       "Minion",
+		APIVersion: "v1beta1",
+		ID:         addr,
+		HostIP:     addr,
 	}
 	data, err := json.Marshal(m)
 	if err != nil {
@@ -38,8 +38,8 @@ func register(endpoint, addr string) error {
 		log.Printf("registered machine: %s\n", addr)
 		return nil
 	}
-        data, err = ioutil.ReadAll(res.Body)
-        log.Printf("Response: %#v", res)
-        log.Printf("Response Body:\n%s", string(data))
+	data, err = ioutil.ReadAll(res.Body)
+	log.Printf("Response: %#v", res)
+	log.Printf("Response Body:\n%s", string(data))
 	return errors.New("error registering: " + addr)
 }

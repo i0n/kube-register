@@ -5,8 +5,10 @@ Register Kubernetes Kubelet machines with the Kubernetes API server using Fleet 
 ## Usage
 
 ```
-kube-register -metadata="kubelet=true" -fleet-endpoint="http://127.0.0.1:4002" -apiserver-endpoint="http://127.0.0.1:8080"
+kube-register -metadata="kubelet=true" -fleet-endpoint="http://127.0.0.1:4002" -apiserver-endpoint="http://127.0.0.1:8080" -reverse-lookup=false
 ```
+
+By default kube-register registers new machines with their public IP addresses, found in fleet. By setting `-reverse-lookup=true` kube-register will do a reverse DNS lookup to get the machine's hostname and registers the machine with its hostname instead with its IP address. Make sure the machine's IP resolves to the same hostname that is printed by `hostname -f` on the machine itself.
 
 ## Building
 

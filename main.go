@@ -14,6 +14,7 @@ var (
 	apiEndpoint   string
 	fleetEndpoint string
 	metadata      string
+	reverseLookup bool
 	syncInterval  int
 )
 
@@ -22,6 +23,7 @@ func init() {
 	flag.StringVar(&apiEndpoint, "api-endpoint", "", "kubernetes API endpoint")
 	flag.StringVar(&fleetEndpoint, "fleet-endpoint", "", "fleet endpoint")
 	flag.StringVar(&metadata, "metadata", "k8s=kubelet", "comma-delimited key/value pairs")
+	flag.BoolVar(&reverseLookup, "reverse-lookup", false, "execute reverse lookup for registering hostnames instead of hosts' public IPs")
 	flag.IntVar(&syncInterval, "sync-interval", 30, "sync interval")
 }
 
@@ -34,7 +36,7 @@ func main() {
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
 	for {
-		machines, err := getMachines(fleetEndpoint, m)
+		machines, err := getMachines(fleetEndpoint, m, reverseLookup)
 		if err != nil {
 			log.Println(err)
 		}
