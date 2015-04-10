@@ -17,6 +17,10 @@ type Minion struct {
         APIVersion string `json:"apiVersion,omitempty"`
 }
 
+type MinionResp struct {
+	Reason string `json:"reason,omitempty"`
+}
+
 func register(endpoint, addr string) error {
 	m := &Minion{
 		Kind:   "Minion",
@@ -24,6 +28,7 @@ func register(endpoint, addr string) error {
 		ID:     addr,
 		HostIP: addr,
 	}
+	mr := &MinionResp{}
 	data, err := json.Marshal(m)
 	if err != nil {
 		return err
@@ -39,7 +44,17 @@ func register(endpoint, addr string) error {
 		return nil
 	}
         data, err = ioutil.ReadAll(res.Body)
+	json.Unmarshal([]byte(data), &mr)
+	if res.StatusCode == 409 && mr.Reason == "AlreadyExists" {
+		log.Printf("Already registered machine: %s\n", addr)
+		return nil
+	}
         log.Printf("Response: %#v", res)
         log.Printf("Response Body:\n%s", string(data))
-	return errors.New("error registering: " + addr)
+	body, err := ioutil.ReadAll(res.Body)
+	reason := ""
+	if err == nil {
+		reason = ": " + string(body)
+	}
+	return errors.New("error registering: " + addr + reason)
 }
