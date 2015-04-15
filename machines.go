@@ -25,7 +25,7 @@ func getMachines(endpoint string, metadata map[string][]string) ([]string, error
 	}
 	c := &http.Client{
 		Transport: &http.Transport{
-			Dial: dialFunc,
+			Dial:              dialFunc,
 			DisableKeepAlives: true,
 		},
 	}
