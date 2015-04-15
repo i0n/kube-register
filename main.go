@@ -16,6 +16,7 @@ var (
 	metadata      string
 	syncInterval  int
 	healthzPort   string
+	printVersion  bool
 )
 
 func init() {
@@ -25,10 +26,16 @@ func init() {
 	flag.StringVar(&metadata, "metadata", "k8s=kubelet", "comma-delimited key/value pairs")
 	flag.StringVar(&healthzPort, "healthz-port", "10250", "the kubelet healthz port")
 	flag.IntVar(&syncInterval, "sync-interval", 30, "sync interval")
+	flag.BoolVar(&printVersion, "version", false, "print version and exit")
 }
 
 func main() {
 	flag.Parse()
+	if printVersion {
+		fmt.Printf("kube-register %s\n", Version)
+		os.Exit(0)
+	}
+
 	m, err := parseMetadata(metadata)
 	if err != nil {
 		log.Println(err)
