@@ -15,6 +15,7 @@ var (
 	fleetEndpoint string
 	metadata      string
 	syncInterval  int
+	healthzPort   string
 )
 
 func init() {
@@ -22,6 +23,7 @@ func init() {
 	flag.StringVar(&apiEndpoint, "api-endpoint", "", "kubernetes API endpoint")
 	flag.StringVar(&fleetEndpoint, "fleet-endpoint", "", "fleet endpoint")
 	flag.StringVar(&metadata, "metadata", "k8s=kubelet", "comma-delimited key/value pairs")
+	flag.StringVar(&healthzPort, "healthz-port", "10250", "the kubelet healthz port")
 	flag.IntVar(&syncInterval, "sync-interval", 30, "sync interval")
 }
 
@@ -34,7 +36,7 @@ func main() {
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
 	for {
-		machines, err := getMachines(fleetEndpoint, m)
+		machines, err := getMachines(fleetEndpoint, healthzPort, m)
 		if err != nil {
 			log.Println(err)
 		}
