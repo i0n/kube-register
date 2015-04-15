@@ -46,7 +46,6 @@ func register(endpoint, addr string) error {
 	data, err = ioutil.ReadAll(res.Body)
 	json.Unmarshal([]byte(data), &mr)
 	if res.StatusCode == 409 && mr.Reason == "AlreadyExists" {
-		log.Printf("Already registered machine: %s\n", addr)
 		return nil
 	}
 	log.Printf("Response: %#v", res)
