@@ -24,7 +24,7 @@ func init() {
 	flag.StringVar(&apiEndpoint, "api-endpoint", "", "kubernetes API endpoint")
 	flag.StringVar(&fleetEndpoint, "fleet-endpoint", "", "fleet endpoint")
 	flag.StringVar(&metadata, "metadata", "k8s=kubelet", "comma-delimited key/value pairs")
-	flag.StringVar(&healthzPort, "healthz-port", "10250", "the kubelet healthz port")
+	flag.StringVar(&healthzPort, "healthz-port", "10255", "the kubelet healthz port")
 	flag.IntVar(&syncInterval, "sync-interval", 30, "sync interval")
 	flag.BoolVar(&printVersion, "version", false, "print version and exit")
 }
