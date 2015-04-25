@@ -21,6 +21,18 @@ Usage of ./kube-register:
 kube-register -metadata="kubelet=true" -fleet-endpoint="http://127.0.0.1:4002" -apiserver-endpoint="http://127.0.0.1:8080"
 ```
 
+The kube-register services requires access to a fleet-endpoint. For example on a CoreOS system, enable the fleet end-point with the following systemd socket file:
+
+```
+[Socket]
+ListenStream=/var/run/fleet.sock
+ListenStream=8000
+Service=fleet.service
+
+[Install]
+WantedBy=sockets.target
+```
+
 ## Building
 
 ```
