@@ -3,7 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
+  "errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -28,13 +28,16 @@ func register(endpoint, addr string) error {
 	if err != nil {
 		return err
 	}
-	url := fmt.Sprintf("%s/api/v1beta1/minions", endpoint)
+
+	url := fmt.Sprintf("%s/api/v1beta3/nodes", endpoint)
+
 	res, err := http.Post(url, "application/json", bytes.NewReader(data))
 	if err != nil {
 		return err
 	}
 	defer res.Body.Close()
-	if res.StatusCode == 202 || res.StatusCode == 200 {
+
+	if res.StatusCode == 202 || res.StatusCode == 200 || res.StatusCode == 201 {
 		log.Printf("registered machine: %s\n", addr)
 		return nil
 	}

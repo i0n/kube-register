@@ -11,7 +11,7 @@ import (
 	"github.com/coreos/fleet/client"
 )
 
-func getMachines(endpoint string, metadata map[string][]string, reverseLookup bool) ([]string, error) {
+func getMachines(endpoint ,healthzport string, metadata map[string][]string, reverseLookup bool) ([]string, error) {
 	dialFunc := net.Dial
 	machineList := make([]string, 0)
 	u, err := url.Parse(endpoint)
@@ -39,7 +39,7 @@ func getMachines(endpoint string, metadata map[string][]string, reverseLookup bo
 		return nil, err
 	}
 	for _, m := range machines {
-		if hasMetadata(m, metadata) && isHealthy(m.PublicIP) {
+		if hasMetadata(m, metadata) && isHealthy(m.PublicIP, healthzPort) {
 			if reverseLookup {
 				hostnames, err := net.LookupAddr(m.PublicIP)
 				if err != nil {
@@ -64,8 +64,8 @@ func getMachines(endpoint string, metadata map[string][]string, reverseLookup bo
 	return machineList, nil
 }
 
-func isHealthy(addr string) bool {
-	url := fmt.Sprintf("http://%s:%d/healthz", addr, 10250)
+func isHealthy(addr, healthzPort string) bool {
+	url := fmt.Sprintf("http://%s:%s/healthz", addr, healthzPort)
 	res, err := http.Get(url)
 	if err != nil {
 		log.Printf("error health checking %s: %s", addr, err)
